@@ -1,0 +1,35 @@
+name: Daily Diary
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # every day at 08:00 UTC
+  workflow_dispatch: {}   # manual trigger
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci || npm install
+
+      - name: Generate daily markdown entry
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/generate-markdown.js
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add entries/
+          git commit -m "Add daily diary entry $(date -u +'%Y-%m-%d')" || echo "No changes"
+          git push
