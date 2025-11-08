@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) throw new Error('Missing GEMINI_API_KEY');
 
+
 function randomFromDate(date) {
     return Math.abs(Math.sin([...date].reduce((a, c) => a + c.charCodeAt(0), 0))) % 1;
 }
@@ -12,6 +13,8 @@ async function gen(date) {
     const wordlist = JSON.parse(await fs.readFile("scripts/words.json", "utf8"));
 
     const wordIndex = Math.floor(randomFromDate(date) * wordlist.length);
+
+    console.log(`Word: ${wordlist[wordIndex]}`);
 
     const payload = {
         contents: [
@@ -44,7 +47,8 @@ async function gen(date) {
 }
 
 async function main() {
-    const date = new Date().toISOString().slice(0, 10);
+    const argDate = process.argv[2];
+    const date = argDate || new Date().toISOString().slice(0, 10);
     const markdown = await gen(date);
     const path = `entries/${date}.md`;
     await fs.mkdir('entries', { recursive: true });

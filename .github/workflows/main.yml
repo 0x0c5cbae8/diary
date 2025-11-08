@@ -2,8 +2,12 @@ name: Daily Diary
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # every day at 08:00 UTC
-  workflow_dispatch: {}   # manual trigger
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Date to generate entry for (YYYY-MM-DD)"
+        required: false
 
 permissions:
   contents: write
@@ -24,7 +28,11 @@ jobs:
       - name: Generate daily markdown entry
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: node scripts/generate.js
+          INPUT_DATE: ${{ github.event.inputs.date }}
+        run: |
+          DATE=${INPUT_DATE:-$(date -u +'%Y-%m-%d')}
+          echo "Generating entry for $DATE"
+          node scripts/generate.js "$DATE"
 
       - name: Commit and push
         run: |
