@@ -18,10 +18,10 @@ async function loadEntry(dateStr) {
         const md = await res.text();
         const html = marked.parse(md);
         const safe = DOMPurify.sanitize(html);
-        entryDiv.innerHTML = safe;
+        entryElem.innerHTML = safe;
         dateH2.textContent = dateStr;
     } catch (err) {
-        entryDiv.textContent = 'No entry for this day yet.';
+        entryElem.textContent = 'No entry for this day yet.';
         dateH2.textContent = dateStr;
     }
 }
