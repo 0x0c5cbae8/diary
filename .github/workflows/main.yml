@@ -21,7 +21,7 @@ jobs:
       - name: Generate daily markdown entry
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: node scripts/generate-markdown.js
+        run: node scripts/generate.js
 
       - name: Commit and push
         run: |
