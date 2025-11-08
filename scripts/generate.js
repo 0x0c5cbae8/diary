@@ -3,12 +3,21 @@ import fs from 'fs/promises';
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) throw new Error('Missing GEMINI_API_KEY');
 
+function randomFromDate(date) {
+    return Math.abs(Math.sin([...date].reduce((a, c) => a + c.charCodeAt(0), 0))) % 1;
+}
+
 async function gen(date) {
+
+    const wordlist = JSON.parse(await fs.readFile("scripts/words.json", "utf8"));
+
+    const wordIndex = Math.floor(randomFromDate(date) * wordlist.length);
+
     const payload = {
         contents: [
             {
                 parts: [
-                    { text: `Write a diary entry for ${date} Start with "Dear diary" and end with "-Trevor".` },
+                    { text: `You are Trevor, a Caltech undergraduate freshman. Write a diary entry for ${date}. Start with "Dear diary" and end with "-Trevor". Additionally, your entry must be related to the word "${wordlist[wordIndex]}".` },
                 ],
             },
         ],
