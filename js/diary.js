@@ -19,10 +19,10 @@ async function loadEntry(dateStr) {
         const html = marked.parse(md);
         const safe = DOMPurify.sanitize(html);
         entryElem.innerHTML = safe;
-        dateH2.textContent = dateStr;
+        dateElem.textContent = dateStr;
     } catch (err) {
         entryElem.textContent = 'No entry for this day yet.';
-        dateH2.textContent = dateStr;
+        dateElem.textContent = dateStr;
     }
 }
 
