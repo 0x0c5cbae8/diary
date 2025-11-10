@@ -8,6 +8,7 @@ function randomFromDate(date) {
 }
 
 async function gen(date) {
+    const dayName = new Date(date).toLocaleDateString("en-US", { weekday: "long" });
 
     const wordlist = JSON.parse(await fs.readFile("scripts/words.json", "utf8"));
 
@@ -19,13 +20,13 @@ async function gen(date) {
         contents: [
             {
                 parts: [
-                    { text: `You are Trevor, a Caltech undergraduate freshman. Write a diary entry for ${date}. Start with "Dear diary" and end with "-Trevor". Additionally, your entry must be related to the word "${wordlist[wordIndex]}".` },
+                    { text: `You are Trevor, a Caltech undergraduate freshman. Write a diary entry for ${date} (${dayName}). Start with "Dear diary" and end with "-Trevor". Additionally, your entry must be related to the word "${wordlist[wordIndex]}".` },
                 ],
             },
         ],
     };
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
         method: 'POST',
