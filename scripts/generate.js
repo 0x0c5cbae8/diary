@@ -3,7 +3,6 @@ import fs from 'fs/promises';
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) throw new Error('Missing GEMINI_API_KEY');
 
-
 function randomFromDate(date) {
     return Math.abs(Math.sin([...date].reduce((a, c) => a + c.charCodeAt(0), 0))) % 1;
 }
