@@ -30,7 +30,7 @@ async function getEntry(dateStr){
 }
 
 async function loadEntry(dateStr) {
-    const entry = getEntry(dateStr);
+    const entry = await getEntry(dateStr);
     if(entry){
         entryElem.innerHTML = entry;
         dateElem.textContent = dateStr;
@@ -43,8 +43,6 @@ async function loadEntry(dateStr) {
 prevBtn.addEventListener('click', () => changeDay(-1));
 nextBtn.addEventListener('click', () => changeDay(1));
 
-while(!getEntry(formatDate(currentDate))){
-    currentDate.setDate(currentDate.getDate() - 1);
-}
+currentDate.setDate(currentDate.getDate() - 1);
 
 loadEntry(formatDate(currentDate));
