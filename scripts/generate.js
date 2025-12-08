@@ -4,7 +4,17 @@ const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) throw new Error('Missing GEMINI_API_KEY');
 
 function randomFromDate(date) {
-    return Math.abs(Math.sin([...date].reduce((a, c) => a + c.charCodeAt(0), 0))) % 1;
+    let h = 2166136261 >>> 0;
+    for (let i = 0; i <date.length; i++) {
+        h = Math.imul(h ^date.charCodeAt(i), 16777619);
+    }
+    
+    h += h << 13;
+    h ^= h >>> 7;
+    h += h << 3;
+    h ^= h >>> 17;
+    
+    return (h >>> 0) / 4294967296;
 }
 
 async function gen(date) {
@@ -13,6 +23,8 @@ async function gen(date) {
     const wordlist = JSON.parse(await fs.readFile("scripts/words.json", "utf8"));
 
     const wordIndex = Math.floor(randomFromDate(date) * wordlist.length);
+
+    if (wordIndex === wordlist.length) wordIndex--;
 
     console.log(`Word: ${wordlist[wordIndex]}`);
 
